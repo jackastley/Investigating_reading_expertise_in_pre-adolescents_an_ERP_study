@@ -391,6 +391,33 @@ dis_amps_w_l<-test[6:9]
 dis_lats_l_l<-test[10:12]
 
 
+test<-all_data[c(FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE)]
+dis_amps_w_r<-test[6:9]
+dis_lats_l_r<-test[10:12]
+
+test<-all_data[c(FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE)]
+flu_amps_l_l<-test[9:12]
+flu_lats_w_l<-test[6:8]
+
+test<-all_data[c(FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE)]
+flu_amps_l_r<-test[9:12]
+flu_lats_w_r<-test[6:8]
+
+test<-all_data[c(FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE)]
+dis_amps_l_l<-test[9:12]
+dis_lats_w_l<-test[6:8]
+
+test<-all_data[c(FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE)]
+dis_amps_l_r<-test[9:12]
+dis_lats_w_r<-test[6:8]
+
+test<-all_data[c(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE)]
+flu_amps_w_l<-test[5:8]
+flu_lats_l_l<-test[9:11]
+
+test<-all_data[c(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE)]
+flu_amps_w_r<-test[5:8]
+flu_lats_l_r<-test[9:11]
 
 ## mean and sd for p3 lats
 mean(p3_lats_l$value, na.rm = TRUE)
