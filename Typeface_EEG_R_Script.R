@@ -14,6 +14,7 @@ library(afex)
 library(e1071)
 library(psych)
 library(corrplot)
+library(RColorBrewer)
 
 
 #SET WORKING DIRECTORY
@@ -336,22 +337,68 @@ correlations<-list()
 diff_amps_w_l<- (dis_amps_w_l - flu_amps_w_l)
 colnames(diff_amps_w_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
-corrplot(correlations$diff_amps_w_l_cor$r[1:10,], method = "number", tl.cex=0.8, number.cex = 0.5, cl.cex = 0.5,
-         cl.ratio=0.4)
+
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_amps_w_l_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+         )
+
+
 
 diff_amps_l_l<- (dis_amps_l_l - flu_amps_l_l)
 colnames(diff_amps_l_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
 
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_amps_l_l_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
+
+
 diff_amps_w_r<- (dis_amps_w_r - flu_amps_w_r)
 colnames(diff_amps_w_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
+
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_amps_w_r_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
 
 
 diff_amps_l_r<- (dis_amps_l_r - flu_amps_l_r)
 colnames(diff_amps_l_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
 
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_amps_l_r_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
 
 
 
@@ -359,15 +406,63 @@ diff_lats_w_l<- (dis_lats_w_l - flu_lats_w_l)
 colnames(diff_lats_w_l)<-c("P1","N1","P3")
 correlations$diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
 
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_lats_w_l_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
+
 
 diff_lats_l_l<- (dis_lats_l_l - flu_lats_l_l)
 colnames(diff_lats_l_l)<-c("P1","N1","P3")
 correlations$diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
 
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_lats_l_l_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
+
 diff_lats_w_r<- (dis_lats_w_r - flu_lats_w_r)
 colnames(diff_lats_w_r)<-c("P1","N1","P3")
 correlations$diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
 
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_lats_w_r_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
+
 diff_lats_l_r<- (dis_lats_l_r - flu_lats_l_r)
 colnames(diff_lats_l_r)<-c("P1","N1","P3")
 correlations$diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
+
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
