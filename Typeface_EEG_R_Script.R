@@ -12,6 +12,8 @@ library(ggplot2)
 library(rstatix)
 library(afex)
 library(e1071)
+library(psych)
+
 
 #SET WORKING DIRECTORY
 
@@ -300,92 +302,16 @@ kurtosis(anova_sla_l$lm$residuals)
 
 
 
+## check mean and sd for p3 lats
+mean(p3_lats_l$value, na.rm = TRUE)
+sd(p3_lats_l$value, na.rm = TRUE)
 
-# ### CALCULATE DIFFERENCE BETWEEN FLUENT AND DISFLUENT AMPLITUDES
-# p1_amps_w_f<-filter(.data = p1_amps_w, p1_amps_w$Fluency == "f")
-# p1_amps_w_d<-filter(.data = p1_amps_w, p1_amps_w$Fluency == "d")
-# p1_amps_w_dif<-p1_amps_w_f$value - p1_amps_w_d$value
-# p1_amps_w_dif_l<-p1_amps_w_dif[c(TRUE, FALSE)]
-# p1_amps_w_dif_r<-p1_amps_w_dif[c(FALSE, TRUE)]
-# 
-# 
-# p1_lats_w_f<-filter(.data = p1_lats_w, p1_lats_w$Fluency == "f")
-# p1_lats_w_d<-filter(.data = p1_lats_w, p1_lats_w$Fluency == "d")
-# p1_lats_w_dif<-p1_lats_w_f$value - p1_lats_w_d$value
-# p1_amps_w_dif_l<-p1_amps_w_dif[c(TRUE, FALSE)]
-# p1_amps_w_dif_r<-p1_amps_w_dif[c(FALSE, TRUE)]
-# 
-# 
-# p1_amps_l_f<-filter(.data = p1_amps_l, p1_amps_l$Fluency == "f")
-# p1_amps_l_d<-filter(.data = p1_amps_l, p1_amps_l$Fluency == "d")
-# p1_amps_l_dif<-p1_amps_l_f$value - p1_amps_l_d$value
-# p1_amps_w_dif_l<-p1_amps_w_dif[c(TRUE, FALSE)]
-# p1_amps_w_dif_r<-p1_amps_w_dif[c(FALSE, TRUE)]
-# 
-# 
-# p1_lats_l_f<-filter(.data = p1_lats_l, p1_lats_l$Fluency == "f")
-# p1_lats_l_d<-filter(.data = p1_lats_l, p1_lats_l$Fluency == "d")
-# p1_lats_l_dif<-p1_lats_l_f$value - p1_lats_l_d$value
-# p1_amps_w_dif_l<-p1_amps_w_dif[c(TRUE, FALSE)]
-# p1_amps_w_dif_r<-p1_amps_w_dif[c(FALSE, TRUE)]
-# 
-# 
-# 
-# 
-# n1_amps_w_f<-filter(.data = n1_amps_w, n1_amps_w$Fluency == "f")
-# n1_amps_w_d<-filter(.data = n1_amps_w, n1_amps_w$Fluency == "d")
-# n1_amps_w_dif<-n1_amps_w_f$value - n1_amps_w_d$value
-# 
-# 
-# n1_lats_w_f<-filter(.data = n1_lats_w, n1_lats_w$Fluency == "f")
-# n1_lats_w_d<-filter(.data = n1_lats_w, n1_lats_w$Fluency == "d")
-# n1_lats_w_dif<-n1_lats_w_f$value - n1_lats_w_d$value
-# 
-# 
-# n1_amps_l_f<-filter(.data = n1_amps_l, n1_amps_l$Fluency == "f")
-# n1_amps_l_d<-filter(.data = n1_amps_l, n1_amps_l$Fluency == "d")
-# n1_amps_l_dif<-n1_amps_l_f$value - n1_amps_l_d$value
-# 
-# 
-# n1_lats_l_f<-filter(.data = n1_lats_l, n1_lats_l$Fluency == "f")
-# n1_lats_l_d<-filter(.data = n1_lats_l, n1_lats_l$Fluency == "d")
-# n1_lats_l_dif<-n1_lats_l_f$value - n1_lats_l_d$value
-# 
-# 
-# 
-# 
-# p3_amps_w_f<-filter(.data = p3_amps_w, p3_amps_w$Fluency == "f")
-# p3_amps_w_d<-filter(.data = p3_amps_w, p3_amps_w$Fluency == "d")
-# p3_amps_w_dif<-p3_amps_w_f$value - p3_amps_w_d$value
-# 
-# 
-# p3_lats_w_f<-filter(.data = p3_lats_w, p3_lats_w$Fluency == "f")
-# p3_lats_w_d<-filter(.data = p3_lats_w, p3_lats_w$Fluency == "d")
-# p3_lats_w_dif<-p3_lats_w_f$value - p3_lats_w_d$value
-# 
-# 
-# p3_amps_l_f<-filter(.data = p3_amps_l, p3_amps_l$Fluency == "f")
-# p3_amps_l_d<-filter(.data = p3_amps_l, p3_amps_l$Fluency == "d")
-# p3_amps_l_dif<-p3_amps_l_f$value - p3_amps_l_d$value
-# 
-# 
-# p3_lats_l_f<-filter(.data = p3_lats_l, p3_lats_l$Fluency == "f")
-# p3_lats_l_d<-filter(.data = p3_lats_l, p3_lats_l$Fluency == "d")
-# p3_lats_l_dif<-p3_lats_l_f$value - p3_lats_l_d$value
-# 
-# 
-# 
-# sl_amps_w_f<-filter(.data = sl_amps_w, sl_amps_w$Fluency == "f")
-# sl_amps_w_d<-filter(.data = sl_amps_w, sl_amps_w$Fluency == "d")
-# sl_amps_w_dif<-sl_amps_w_f$value - sl_amps_w_d$value
-# 
-# sl_amps_l_f<-filter(.data = sl_amps_l, sl_amps_l$Fluency == "f")
-# sl_amps_l_d<-filter(.data = sl_amps_l, sl_amps_l$Fluency == "d")
-# sl_amps_l_dif<-sl_amps_l_f$value - sl_amps_l_d$value
-# 
-# 
+mean(p3_lats_w$value, na.rm = TRUE)
+sd(p3_lats_w$value, na.rm = TRUE)
 
 
+
+#Create matrices for each outcome variable
 test<-all_data[c(TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE)]
 dis_amps_w_l<-test[6:9]
 dis_lats_l_l<-test[10:12]
@@ -419,9 +345,48 @@ test<-all_data[c(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE)]
 flu_amps_w_r<-test[5:8]
 flu_lats_l_r<-test[9:11]
 
-## mean and sd for p3 lats
-mean(p3_lats_l$value, na.rm = TRUE)
-sd(p3_lats_l$value, na.rm = TRUE)
 
-mean(p3_lats_w$value, na.rm = TRUE)
-sd(p3_lats_w$value, na.rm = TRUE)
+#CALCULATE DIFFERENCES BETWEEN FLUENT AND DISFLUENT AMPLITUDES FOR EACH COMPONENT AND CORRELATE WITH BEHAVIOURAL DATA
+
+behavioural_data<-all_data[3:38]
+
+
+diff_amps_w_l<- (dis_amps_w_l - flu_amps_w_l)
+colnames(diff_amps_w_l)<-c("P1","N1","P3","SLA")
+diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
+
+diff_amps_l_l<- (dis_amps_l_l - flu_amps_l_l)
+colnames(diff_amps_l_l)<-c("P1","N1","P3","SLA")
+diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
+
+diff_amps_w_r<- (dis_amps_w_r - flu_amps_w_r)
+colnames(diff_amps_w_r)<-c("P1","N1","P3","SLA")
+diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
+
+
+diff_amps_l_r<- (dis_amps_l_r - flu_amps_l_r)
+colnames(diff_amps_l_r)<-c("P1","N1","P3","SLA")
+diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
+
+
+
+
+diff_lats_w_l<- (dis_lats_w_l - flu_lats_w_l)
+colnames(diff_lats_w_l)<-c("P1","N1","P3")
+diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
+
+
+diff_lats_l_l<- (dis_lats_l_l - flu_lats_l_l)
+colnames(diff_lats_l_l)<-c("P1","N1","P3")
+diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
+
+diff_lats_w_r<- (dis_lats_w_r - flu_lats_w_r)
+colnames(diff_lats_w_r)<-c("P1","N1","P3")
+diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
+
+diff_lats_l_r<- (dis_lats_l_r - flu_lats_l_r)
+colnames(diff_lats_l_r)<-c("P1","N1","P3")
+diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
+
+
+
