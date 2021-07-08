@@ -96,27 +96,6 @@ amplitudes<-filter(.data = new_data, new_data$Value_Type == "a")
 latencies<-filter(.data = new_data, new_data$Value_Type == "l")
 
 
-# #COMBINE LEFT AND RIGHT HEMISPHERES
-
-# l_amps<-filter(.data = amplitudes, amplitudes$Hemisphere == "l")
-# r_amps<-filter(.data = amplitudes, amplitudes$Hemisphere == "r")
-# 
-# mean_amps<-(l_amps$value+r_amps$value)/2
-# 
-# new_amps<- subset(l_amps, select = -Hemisphere)
-# new_amps$value<-mean_amps
-# 
-# 
-# latencies<-filter(.data = new_data, new_data$Value_Type == "l")
-# l_lats<-filter(.data = latencies, latencies$Hemisphere == "l")
-# r_lats<-filter(.data = latencies, latencies$Hemisphere == "r")
-# 
-# mean_lats<-(l_lats$value+r_lats$value)/2
-# 
-# new_lats<- subset(l_lats, select = -Hemisphere)
-# new_lats$value<-mean_lats
-
-
 ###ANOVAs
 
 #Word task
@@ -387,6 +366,8 @@ diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
 diff_lats_l_r<- (dis_lats_l_r - flu_lats_l_r)
 colnames(diff_lats_l_r)<-c("P1","N1","P3")
 diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
+
+
 
 
 
