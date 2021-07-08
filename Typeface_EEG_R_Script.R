@@ -13,6 +13,7 @@ library(rstatix)
 library(afex)
 library(e1071)
 library(psych)
+library(corrplot)
 
 
 #SET WORKING DIRECTORY
@@ -329,45 +330,44 @@ flu_lats_l_r<-test[9:11]
 
 behavioural_data<-all_data[3:38]
 
+correlations<-list()
+
 
 diff_amps_w_l<- (dis_amps_w_l - flu_amps_w_l)
 colnames(diff_amps_w_l)<-c("P1","N1","P3","SLA")
-diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
+correlations$diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
+corrplot(correlations$diff_amps_w_l_cor$r[1:10,], method = "number", tl.cex=0.8, number.cex = 0.5, cl.cex = 0.5,
+         cl.ratio=0.4)
 
 diff_amps_l_l<- (dis_amps_l_l - flu_amps_l_l)
 colnames(diff_amps_l_l)<-c("P1","N1","P3","SLA")
-diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
+correlations$diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
 
 diff_amps_w_r<- (dis_amps_w_r - flu_amps_w_r)
 colnames(diff_amps_w_r)<-c("P1","N1","P3","SLA")
-diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
+correlations$diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
 
 
 diff_amps_l_r<- (dis_amps_l_r - flu_amps_l_r)
 colnames(diff_amps_l_r)<-c("P1","N1","P3","SLA")
-diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
+correlations$diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
 
 
 
 
 diff_lats_w_l<- (dis_lats_w_l - flu_lats_w_l)
 colnames(diff_lats_w_l)<-c("P1","N1","P3")
-diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
+correlations$diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
 
 
 diff_lats_l_l<- (dis_lats_l_l - flu_lats_l_l)
 colnames(diff_lats_l_l)<-c("P1","N1","P3")
-diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
+correlations$diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
 
 diff_lats_w_r<- (dis_lats_w_r - flu_lats_w_r)
 colnames(diff_lats_w_r)<-c("P1","N1","P3")
-diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
+correlations$diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
 
 diff_lats_l_r<- (dis_lats_l_r - flu_lats_l_r)
 colnames(diff_lats_l_r)<-c("P1","N1","P3")
-diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
-
-
-
-
-
+correlations$diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
