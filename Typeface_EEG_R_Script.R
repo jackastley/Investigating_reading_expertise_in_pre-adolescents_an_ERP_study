@@ -76,12 +76,19 @@ for(c in 1:length(all_data)){
 }
 o_coords<-na.omit(o_coords)
 
-#remove behavioural data coordinates
-o_coords<-filter(.data = o_coords, o_coords$column > 38)
+# #remove behavioural data coordinates
+# o_coords<-filter(.data = o_coords, o_coords$column > 38)
+
+#remove demographic coordinates
+o_coords<-filter(.data = o_coords, o_coords$column > 4)
 
 #NA outliers we don't want
-all_data[o_coords$row,o_coords$column]<-NA
+for(l in 1:length(o_coords$row)){
+  all_data[o_coords$row[l],o_coords$column[l]]<-NA
+}
 
+#remove WJ_RV_ANA with 99 value
+all_data[28,13]<-NA
 
 #CREATE DATA FRAME SO ANOVA WILL WORK
 
@@ -465,4 +472,5 @@ corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number",
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
 )
+
 
