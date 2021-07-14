@@ -268,13 +268,12 @@ p3_lats_l<-filter(latencies, latencies$Component == "p3" & latencies$Task == "l"
 anova_p3l_l<-aov_ez(id = "id", dv = "value", data = p3_lats_l, within = c("Fluency","Hemisphere"))
 anova_p3l_l
 
+
 #check normality
 hist(anova_p3l_l$lm$residuals)
 shapiro.test(anova_p3l_l$lm$residuals)
 skewness(anova_p3l_l$lm$residuals)
 kurtosis(anova_p3l_l$lm$residuals)
-
-
 
 
 sl_amps_l<-filter(amplitudes, amplitudes$Component == "sl"& amplitudes$Task == "l")
@@ -474,3 +473,58 @@ corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number",
 )
 
 
+
+### CALCULATE MEANS AND SDS FOR HYPOTHESES TESTING
+
+#1:
+
+#CALCULATE MEAN AND SD SL AMPLITUDE FOR FLUENT AND DISFLUENT FONTS FOR THE WORD TASK
+(mean(dis_amps_w_l$w_sla_d_l, na.rm=T)+mean(dis_amps_w_r$w_sla_d_r,na.rm=T))/2
+(sd(dis_amps_w_l$w_sla_d_l, na.rm=T)+sd(dis_amps_w_r$w_sla_d_r,na.rm=T))/2
+
+(mean(flu_amps_w_l$w_sla_f_l, na.rm=T)+mean(flu_amps_w_r$w_sla_f_r,na.rm=T))/2
+(sd(flu_amps_w_l$w_sla_f_l, na.rm=T)+sd(flu_amps_w_r$w_sla_f_r,na.rm=T))/2
+
+#CHECK NUMBER OF VALUES ARE CONSISTENT
+
+which(dis_amps_w_l$w_sla_d_l %in% NA)
+which(flu_amps_w_l$w_sla_f_l %in% NA)
+
+which(dis_amps_w_r$w_sla_d_r %in% NA)
+which(flu_amps_w_r$w_sla_f_r %in% NA)
+
+#1 less participant in fluent amplitudes for some reason
+
+
+#CALCULATE MEAN AND SD AMPLITUDE FOR LEFT AND RIGHT HEMISPHERE FOR N1 WORD TASK
+
+right_n1a_w<- filter(n1_amps_w, n1_amps_w$Hemisphere == "r")
+left_n1a_w<- filter(n1_amps_w, n1_amps_w$Hemisphere == "l")
+
+mean(left_n1a_w$value, na.rm=T)
+sd(left_n1a_w$value, na.rm=T)
+
+mean(right_n1a_w$value, na.rm=T)
+sd(right_n1a_w$value, na.rm=T)
+
+
+#CHECK NUMBER OF VALUES ARE CONSISTENT
+
+which(left_n1a_w$value %in% NA)
+which(right_n1a_w$value %in% NA)
+
+
+
+
+### CREATE AND FORMAT ERROR RATE DATA FRAME
+
+er_file<-"ERROR_RATE_DATA.csv"
+er_data<-read.csv(er_file)
+
+#CONVERT FROM WIDE TO LONG DATA
+new_data<- er_data %>% pivot_longer(
+  cols= c(TFCR_L:NDNR_L,TFCR_W:NDNR_W),
+  names_pattern = "(.)(.)(.*)_(.)",
+  names_to = c("Target", "Fluency","Response","Task"),
+  values_to = "value"
+)
