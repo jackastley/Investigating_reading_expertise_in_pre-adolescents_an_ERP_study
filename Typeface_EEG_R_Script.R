@@ -15,11 +15,99 @@ library(e1071)
 library(psych)
 library(corrplot)
 library(RColorBrewer)
+library(emmeans)
 
 
 #SET WORKING DIRECTORY
 
 setwd("//rdfs.unisa.edu.au/Group_bbb_research/CAIN/PEOPLE/JackA/Typeface_EEG/Data_Analysis")
+
+
+### CREATE AND FORMAT ERROR RATE DATA FRAME
+
+er_file<-"ERROR_RATE_DATA.csv"
+er_data<-read.csv(er_file)
+
+#CONVERT FROM WIDE TO LONG DATA
+er_data<- er_data %>% pivot_longer(
+  cols= c(TFCR_L:NDNR_L,TFCR_W:NDNR_W),
+  names_pattern = "(.)(.)(.*)_(.)",
+  names_to = c("Target", "Fluency","Response","Task"),
+  values_to = "value"
+)
+
+error_rates<-tibble(Fluent_Target_Letter=NA,Disfluent_Target_Letter=NA,Fluent_NonTarget_Letter=NA,Disfluent_NonTarget_Letter=NA,Fluent_Target_Word=NA,Disfluent_Target_Word=NA,Fluent_NonTarget_Word=NA,Disfluent_NonTarget_Word=NA, .rows = 39)
+
+
+
+correct<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="IR")]
+error_rates$Fluent_Target_Letter<-(incorrect/(correct+incorrect))*100
+
+
+correct<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="IR")]
+error_rates$Disfluent_Target_Letter<-(incorrect/(correct+incorrect))*100
+
+
+correct<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="N"&er_data$Task=="L"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="N"&er_data$Task=="L"&er_data$Response=="IR")]
+error_rates$Fluent_NonTarget_Letter<-(incorrect/(correct+incorrect))*100
+
+correct<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Task=="L"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Task=="L"&er_data$Response=="IR")]
+error_rates$Disfluent_NonTarget_Letter<-(incorrect/(correct+incorrect))*100
+
+
+correct<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="W"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="W"&er_data$Response=="IR")]
+error_rates$Fluent_Target_Word<-(incorrect/(correct+incorrect))*100
+
+
+correct<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="T"&er_data$Task=="W"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="T"&er_data$Task=="W"&er_data$Response=="IR")]
+error_rates$Disfluent_Target_Word<-(incorrect/(correct+incorrect))*100
+
+
+correct<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="N"&er_data$Task=="W"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="N"&er_data$Task=="L"&er_data$Response=="IR")]
+error_rates$Fluent_NonTarget_Word<-(incorrect/(correct+incorrect))*100
+
+correct<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Task=="W"&er_data$Response=="CR")]
+incorrect<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Task=="W"&er_data$Response=="IR")]
+error_rates$Disfluent_NonTarget_Word<-(incorrect/(correct+incorrect))*100
+
+#MAKE ERROR RATES A MATRIX
+error_rates$Average<-NA
+error_rates$Average_L<-NA
+error_rates$Average_W<-NA
+error_rates<-as.matrix(error_rates)
+
+#CALCULATE AVERAGE ERROR RATE PER PARTICIPANT AND IN EACH TASK
+for(p in 1:39){
+  error_rates[p,9]<-mean(error_rates[p,1:8], na.rm=T)
+  error_rates[p,10]<-mean(error_rates[p,1:4], na.rm=T)
+  error_rates[p,11]<-mean(error_rates[p,5:8], na.rm=T)
+}
+
+#EXTRACT ONLY NON-TARGET ERROR RATES FIX!!!!
+nt_error_rates<-error_rates[,c(3,4,7,8)]
+nt_error_rates<-cbind(nt_error_rates, Average=0,Average_L=0,Average_W=0)
+
+for(p in 1:39){
+  nt_error_rates[p,5]<-mean(nt_error_rates[p,1:4], na.rm=T)
+  nt_error_rates[p,6]<-mean(nt_error_rates[p,1:2], na.rm=T)
+  nt_error_rates[p,7]<-mean(nt_error_rates[p,3:4], na.rm=T)
+}
+
+
+error_rates<-format(error_rates, digits=2, nsmall=2)
+#write.csv(error_rates, file="error_rates.csv")
+nt_error_rates<-format(nt_error_rates, digits=2, nsmall=2)
+#write.csv(nt_error_rates, file="nt_error_rates.csv")
+
+#Participant 22 has an error rate greater than 50% for non targets
+
 
 #SET DATA FILE NAME
 
@@ -29,6 +117,8 @@ filename<-"ALL_DATA.csv"
 
 all_data<-read.csv(filename)
 
+#DELETE PARTICIPANT 23
+all_data<-all_data[-22,]
 
 ##CHECK ALL THE DATA FOR OUTLIERS
 
@@ -45,7 +135,7 @@ all_data_sds<-sapply(all_data[,1:length(all_data)],sd, na.rm = TRUE)
 all_data_sds<-as.data.frame(all_data_sds)
 all_data_sds<-t(all_data_sds)
 
-zscores<-matrix(nrow = 39, ncol = 94)
+zscores<-matrix(nrow = 38, ncol = 94)
 
 for(c in 1:length(all_data)){
   for(r in 1:length(all_data$id)){
@@ -57,7 +147,7 @@ colnames(zscores)<-colnames(all_data)
 
 
 #IDENTIFY OUTLIERS
-o_coords<-matrix(nrow = 3666, ncol=2)
+o_coords<-matrix(nrow = 200, ncol=2)
 colnames(o_coords)<-c("row", "column")
 o_coords<-as.data.frame(o_coords)
 count<-0
@@ -76,8 +166,6 @@ for(c in 1:length(all_data)){
 }
 o_coords<-na.omit(o_coords)
 
-# #remove behavioural data coordinates
-# o_coords<-filter(.data = o_coords, o_coords$column > 38)
 
 #remove demographic coordinates
 o_coords<-filter(.data = o_coords, o_coords$column > 4)
@@ -88,7 +176,7 @@ for(l in 1:length(o_coords$row)){
 }
 
 #remove WJ_RV_ANA with 99 value
-all_data[28,13]<-NA
+all_data[27,13]<-NA
 
 #CREATE DATA FRAME SO ANOVA WILL WORK
 
@@ -289,6 +377,15 @@ kurtosis(anova_sla_l$lm$residuals)
 
 
 
+#POST-HOC COMPARISONS FOR FLUENCY:HEMISPHERE INTERACTION FOR P3 LATS IN THE LETTER TASK
+contrasting <- emmeans(anova_p3l_l, ~ Fluency*Hemisphere)
+contrast(contrasting, method =  "pairwise", adjust = "none")
+eff_size(contrasting, sigma = mean(sigma(anova_p3l_l$lm)), edf=df.residual(anova_p3l_l$lm))
+
+#NO DIFFERENCES SEEN (COME BACK AND CHECK!!!)
+
+
+
 ## check mean and sd for p3 lats
 mean(p3_lats_l$value, na.rm = TRUE)
 sd(p3_lats_l$value, na.rm = TRUE)
@@ -353,7 +450,7 @@ corrplot(correlations$diff_amps_w_l_cor$p[3:17,], method = "number",
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
-         )
+)
 
 
 
@@ -514,76 +611,87 @@ which(left_n1a_w$value %in% NA)
 which(right_n1a_w$value %in% NA)
 
 
+#CORRELATE DISFLUENT AND FLUENT AMPLITUDES SEPARATLEY
 
+correlations$diS_amps_w_l_cor<-corr.test(behavioural_data,dis_amps_w_l, adjust="none")
 
-### CREATE AND FORMAT ERROR RATE DATA FRAME
-
-er_file<-"ERROR_RATE_DATA.csv"
-er_data<-read.csv(er_file)
-
-#CONVERT FROM WIDE TO LONG DATA
-er_data<- er_data %>% pivot_longer(
-  cols= c(TFCR_L:NDNR_L,TFCR_W:NDNR_W),
-  names_pattern = "(.)(.)(.*)_(.)",
-  names_to = c("Target", "Fluency","Response","Task"),
-  values_to = "value"
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diS_amps_w_l_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
 )
 
-#CREATE DF
-error_rates<-tibble(
-  ID = 1:39, Target_Error_Rate_F_W = NA, Non_Target_Error_Rate_F_W=NA,Target_Error_Rate_F_L=NA, Non_Target_Error_Rate_F_L=NA,
-  Target_Error_Rate_D_W = NA, Non_Target_Error_Rate_D_W=NA,Target_Error_Rate_D_L=NA, Non_Target_Error_Rate_D_L=NA
+
+
+correlations$diS_amps_w_r_cor<-corr.test(behavioural_data,dis_amps_w_r, adjust="none")
+
+#CORRELATION P-VALUE MATRIX
+corrplot(correlations$diS_amps_w_r_cor$p[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(0,1)
+)
+
+
+
+#ATTEMPT LOOP
+#set variables
+hem<-c("l","r")
+task<-c("w","l")
+fluency<-c("dis","flu")
+value<-c("amps","lats")
+
+correlations_2<-list()
+count<-0
+corobject_c<-c()
+
+for(v in 1:length(value)){
+  for(f in 1:length(fluency)){
+    for(t in 1:length(task)){
+      for(h in 1:length(hem)){
+        count<-count+1
+        object<-paste(fluency[f], value[v], task[t], hem[h], sep="_")
+        corobject<-paste(object,"cor", sep="_")
+        
+        corobject_c[count]<-paste(object,"cor", sep="_")
+        correlations_2[[corobject]]<-corr.test(behavioural_data, get(object),adjust="none")
+        
+        correlations_2[[corobject]]$plot<-
+          corrplot(correlations_2[[corobject]]$p[3:17,], method = "number", 
+                   tl.cex=0.8,
+                   # is.corr = F, 
+                   # number.cex = 0.5, 
+                   # cl.cex = 0.5,
+                   cl.ratio=0.4,
+                   col = brewer.pal(n = 10, name = 'Dark2'),
+                   cl.lim= c(0,1)
+          )
+      }
+    }
+  }
+}
+
+
+correlations_2[[corobject]]$plot<-
+  corrplot(correlations_2[[corobject_c[8]]]$p[3:17,], method = "number", 
+           tl.cex=0.8,
+           # is.corr = F, 
+           # number.cex = 0.5, 
+           # cl.cex = 0.5,
+           cl.ratio=0.4,
+           col = brewer.pal(n = 10, name = 'Dark2'),
+           cl.lim= c(0,1)
   )
 
-#REMOVE NR DATA FROM DF
-er_data<-er_data[-which(er_data$Response=="NR"),]
 
-#ER CALCULATION
-correct_responses<-filter(er_data, er_data$Response == "CR")
-incorrect_responses<-filter(er_data, er_data$Response == "IR")
-
-er_vector<-(incorrect_responses$value/(incorrect_responses$value+correct_responses$value))
-er_vector<-er_vector*100
-
-
-er_calculated<-correct_responses
-er_calculated$Response<-NULL
-
-er_calculated$value<-er_vector
-
-
-#INSERT INTO DF
-error_rates$Target_Error_Rate_F_W<-er_calculated$value[
-  which(er_calculated$Fluency=="F" & er_calculated$Target=="T" & er_calculated$Task=="W")
-]
-  
-error_rates$Target_Error_Rate_F_L<-er_calculated$value[
-  which(er_calculated$Fluency=="F" & er_calculated$Target=="T" & er_calculated$Task=="L")
-]
-
-error_rates$Target_Error_Rate_D_W<-er_calculated$value[
-  which(er_calculated$Fluency=="D" & er_calculated$Target=="T" & er_calculated$Task=="W")
-]
-
-error_rates$Target_Error_Rate_D_L<-er_calculated$value[
-  which(er_calculated$Fluency=="D" & er_calculated$Target=="T" & er_calculated$Task=="L")
-]
-
-
-error_rates$Non_Target_Error_Rate_F_W<-er_calculated$value[
-  which(er_calculated$Fluency=="F" & er_calculated$Target=="N" & er_calculated$Task=="W")
-]
-
-error_rates$Non_Target_Error_Rate_F_L<-er_calculated$value[
-  which(er_calculated$Fluency=="F" & er_calculated$Target=="N" & er_calculated$Task=="L")
-]
-
-error_rates$Non_Target_Error_Rate_D_W<-er_calculated$value[
-  which(er_calculated$Fluency=="D" & er_calculated$Target=="N" & er_calculated$Task=="W")
-]
-
-error_rates$Non_Target_Error_Rate_D_L<-er_calculated$value[
-  which(er_calculated$Fluency=="D" & er_calculated$Target=="N" & er_calculated$Task=="L")
-]
-
+#fluent amplitudes on right hemisphere have a low p-val for WJ
 
