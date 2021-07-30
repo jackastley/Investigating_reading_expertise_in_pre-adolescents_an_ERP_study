@@ -522,9 +522,68 @@ er_file<-"ERROR_RATE_DATA.csv"
 er_data<-read.csv(er_file)
 
 #CONVERT FROM WIDE TO LONG DATA
-new_data<- er_data %>% pivot_longer(
+er_data<- er_data %>% pivot_longer(
   cols= c(TFCR_L:NDNR_L,TFCR_W:NDNR_W),
   names_pattern = "(.)(.)(.*)_(.)",
   names_to = c("Target", "Fluency","Response","Task"),
   values_to = "value"
 )
+
+#CREATE DF
+error_rates<-tibble(
+  ID = 1:39, Target_Error_Rate_F_W = NA, Non_Target_Error_Rate_F_W=NA,Target_Error_Rate_F_L=NA, Non_Target_Error_Rate_F_L=NA,
+  Target_Error_Rate_D_W = NA, Non_Target_Error_Rate_D_W=NA,Target_Error_Rate_D_L=NA, Non_Target_Error_Rate_D_L=NA
+  )
+
+#REMOVE NR DATA FROM DF
+er_data<-er_data[-which(er_data$Response=="NR"),]
+
+#ER CALCULATION
+correct_responses<-filter(er_data, er_data$Response == "CR")
+incorrect_responses<-filter(er_data, er_data$Response == "IR")
+
+er_vector<-(incorrect_responses$value/(incorrect_responses$value+correct_responses$value))
+er_vector<-er_vector*100
+
+
+er_calculated<-correct_responses
+er_calculated$Response<-NULL
+
+er_calculated$value<-er_vector
+
+
+#INSERT INTO DF
+error_rates$Target_Error_Rate_F_W<-er_calculated$value[
+  which(er_calculated$Fluency=="F" & er_calculated$Target=="T" & er_calculated$Task=="W")
+]
+  
+error_rates$Target_Error_Rate_F_L<-er_calculated$value[
+  which(er_calculated$Fluency=="F" & er_calculated$Target=="T" & er_calculated$Task=="L")
+]
+
+error_rates$Target_Error_Rate_D_W<-er_calculated$value[
+  which(er_calculated$Fluency=="D" & er_calculated$Target=="T" & er_calculated$Task=="W")
+]
+
+error_rates$Target_Error_Rate_D_L<-er_calculated$value[
+  which(er_calculated$Fluency=="D" & er_calculated$Target=="T" & er_calculated$Task=="L")
+]
+
+
+error_rates$Non_Target_Error_Rate_F_W<-er_calculated$value[
+  which(er_calculated$Fluency=="F" & er_calculated$Target=="N" & er_calculated$Task=="W")
+]
+
+error_rates$Non_Target_Error_Rate_F_L<-er_calculated$value[
+  which(er_calculated$Fluency=="F" & er_calculated$Target=="N" & er_calculated$Task=="L")
+]
+
+error_rates$Non_Target_Error_Rate_D_W<-er_calculated$value[
+  which(er_calculated$Fluency=="D" & er_calculated$Target=="N" & er_calculated$Task=="W")
+]
+
+error_rates$Non_Target_Error_Rate_D_L<-er_calculated$value[
+  which(er_calculated$Fluency=="D" & er_calculated$Target=="N" & er_calculated$Task=="L")
+]
+
+
