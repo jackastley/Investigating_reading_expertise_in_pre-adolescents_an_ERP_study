@@ -576,19 +576,14 @@ corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number",
 #1:
 
 #CALCULATE MEAN AND SD SL AMPLITUDE FOR FLUENT AND DISFLUENT FONTS FOR THE WORD TASK
-(mean(dis_amps_w_l$w_sla_d_l, na.rm=T)+mean(dis_amps_w_r$w_sla_d_r,na.rm=T))/2
-(sd(dis_amps_w_l$w_sla_d_l, na.rm=T)+sd(dis_amps_w_r$w_sla_d_r,na.rm=T))/2
+#disfluent
+(mean(anova_sla_w$data$wide$d_l)+mean(anova_sla_w$data$wide$d_r))/2
+(sd(anova_sla_w$data$wide$d_l)+sd(anova_sla_w$data$wide$d_r))/2
 
-(mean(flu_amps_w_l$w_sla_f_l, na.rm=T)+mean(flu_amps_w_r$w_sla_f_r,na.rm=T))/2
-(sd(flu_amps_w_l$w_sla_f_l, na.rm=T)+sd(flu_amps_w_r$w_sla_f_r,na.rm=T))/2
+#fluent
+(mean(anova_sla_w$data$wide$f_l)+mean(anova_sla_w$data$wide$f_r))/2
+(sd(anova_sla_w$data$wide$f_l)+sd(anova_sla_w$data$wide$f_r))/2
 
-#CHECK NUMBER OF VALUES ARE CONSISTENT
-
-which(dis_amps_w_l$w_sla_d_l %in% NA)
-which(flu_amps_w_l$w_sla_f_l %in% NA)
-
-which(dis_amps_w_r$w_sla_d_r %in% NA)
-which(flu_amps_w_r$w_sla_f_r %in% NA)
 
 #1 less participant in fluent amplitudes for some reason
 
@@ -693,5 +688,6 @@ correlations_2[[corobject]]$plot<-
   )
 
 
-#fluent amplitudes on right hemisphere have a low p-val for WJ
+#fluent letter amplitudes on right hemisphere have a low p-val for WJ
+plot(flu_amps_l_r$l_p1a_f_r,behavioural_data$WJ_Tot)
 
