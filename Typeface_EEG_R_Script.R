@@ -171,38 +171,38 @@ o_coords<-na.omit(o_coords)
 o_coords<-filter(.data = o_coords, o_coords$column > 4)
 
 
-#SEE WHAT HAPPENS WHEN WE REPLACE WITH Z=3
-#create means and sds vector
-data_means<-c()
-for(l in 1:length(all_data)){
-  data_means[l]<-mean(all_data[,l], na.rm=TRUE)
-}
-
-data_sds<-c()
-for(l in 1:length(all_data)){
-  data_sds[l]<-sd(all_data[,l], na.rm=TRUE)
-}
-
-#NA outliers we don't want
-for(l in 1:19){
-  all_data[o_coords$row[l],o_coords$column[l]]<-NA
-}
-
-for(l in 20:length(o_coords$column)){
-  
-  if(zscores[o_coords$row[l],o_coords$column[l]] > 0){
-    all_data[o_coords$row[l],o_coords$column[l]]<- 3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
-    }
-  if(zscores[o_coords$row[l],o_coords$column[l]] < 0){
-    all_data[o_coords$row[l],o_coords$column[l]]<- -3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
-  }
-}
-
-
+# #SEE WHAT HAPPENS WHEN WE REPLACE WITH Z=3
+# #create means and sds vector
+# data_means<-c()
+# for(l in 1:length(all_data)){
+#   data_means[l]<-mean(all_data[,l], na.rm=TRUE)
+# }
+# 
+# data_sds<-c()
+# for(l in 1:length(all_data)){
+#   data_sds[l]<-sd(all_data[,l], na.rm=TRUE)
+# }
+# 
 # #NA outliers we don't want
-# for(l in 1:length(o_coords$row)){
+# for(l in 1:19){
 #   all_data[o_coords$row[l],o_coords$column[l]]<-NA
 # }
+# 
+# for(l in 20:length(o_coords$column)){
+#   
+#   if(zscores[o_coords$row[l],o_coords$column[l]] > 0){
+#     all_data[o_coords$row[l],o_coords$column[l]]<- 3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
+#     }
+#   if(zscores[o_coords$row[l],o_coords$column[l]] < 0){
+#     all_data[o_coords$row[l],o_coords$column[l]]<- -3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
+#   }
+# }
+# 
+
+#NA outliers we don't want
+for(l in 1:length(o_coords$row)){
+  all_data[o_coords$row[l],o_coords$column[l]]<-NA
+}
 
 #remove WJ_RV_ANA with 99 value
 all_data[27,13]<-NA
@@ -411,7 +411,26 @@ contrasting <- emmeans(anova_p3l_l, ~ Fluency*Hemisphere)
 contrast(contrasting, method =  "pairwise", adjust = "none")
 eff_size(contrasting, sigma = mean(sigma(anova_p3l_l$lm)), edf=df.residual(anova_p3l_l$lm))
 
-#NO DIFFERENCES SEEN (COME BACK AND CHECK!!!)
+#MAKE BOXPLOT TO CHECK INTERACTION
+
+#boxplot
+anova_p3l_l$data$long$interaction<-interaction(anova_p3l_l$data$long$Fluency, anova_p3l_l$data$long$Hemisphere, sep=":")
+
+boxplot<-ggplot(aes(y = value, x = interaction), data = anova_p3l_l$data$long) + 
+  geom_boxplot()
+boxplot
+# boxplot<-boxplot + 
+#   scale_fill_discrete(name = "Congruence", labels = c("Congruent","Incongruent")) +
+#   labs(title="Three Way Interaction", x = "Colour Identification                                                                                             Word Identification", y = "Reaction Time (ms)")+
+#   scale_x_discrete(labels= c("D1","D2","D3","D4","D1","D2","D3","D4","D1","D2","D3","D4","D1","D2","D3","D4"))
+# 
+# boxplot+
+#   geom_signif(
+#     data=anno_df, 
+#     aes(xmin = group1, xmax = group2, annotations = p.signif, y_position = y_pos), 
+#     manual= TRUE)
+
+
 
 
 
