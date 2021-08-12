@@ -170,10 +170,39 @@ o_coords<-na.omit(o_coords)
 #remove demographic coordinates
 o_coords<-filter(.data = o_coords, o_coords$column > 4)
 
+
+#SEE WHAT HAPPENS WHEN WE REPLACE WITH Z=3
+#create means and sds vector
+data_means<-c()
+for(l in 1:length(all_data)){
+  data_means[l]<-mean(all_data[,l], na.rm=TRUE)
+}
+
+data_sds<-c()
+for(l in 1:length(all_data)){
+  data_sds[l]<-sd(all_data[,l], na.rm=TRUE)
+}
+
 #NA outliers we don't want
-for(l in 1:length(o_coords$row)){
+for(l in 1:19){
   all_data[o_coords$row[l],o_coords$column[l]]<-NA
 }
+
+for(l in 20:length(o_coords$column)){
+  
+  if(zscores[o_coords$row[l],o_coords$column[l]] > 0){
+    all_data[o_coords$row[l],o_coords$column[l]]<- 3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
+    }
+  if(zscores[o_coords$row[l],o_coords$column[l]] < 0){
+    all_data[o_coords$row[l],o_coords$column[l]]<- -3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
+  }
+}
+
+
+# #NA outliers we don't want
+# for(l in 1:length(o_coords$row)){
+#   all_data[o_coords$row[l],o_coords$column[l]]<-NA
+# }
 
 #remove WJ_RV_ANA with 99 value
 all_data[27,13]<-NA
@@ -608,37 +637,6 @@ which(right_n1a_w$value %in% NA)
 
 #CORRELATE DISFLUENT AND FLUENT AMPLITUDES SEPARATLEY
 
-correlations$diS_amps_w_l_cor<-corr.test(behavioural_data,dis_amps_w_l, adjust="none")
-
-#CORRELATION P-VALUE MATRIX
-corrplot(correlations$diS_amps_w_l_cor$p[3:17,], method = "number", 
-         tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
-         cl.ratio=0.4,
-         col = brewer.pal(n = 10, name = 'Dark2'),
-         cl.lim= c(0,1)
-)
-
-
-
-correlations$diS_amps_w_r_cor<-corr.test(behavioural_data,dis_amps_w_r, adjust="none")
-
-#CORRELATION P-VALUE MATRIX
-corrplot(correlations$diS_amps_w_r_cor$p[3:17,], method = "number", 
-         tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
-         cl.ratio=0.4,
-         col = brewer.pal(n = 10, name = 'Dark2'),
-         cl.lim= c(0,1)
-)
-
-
-
-#ATTEMPT LOOP
 #set variables
 hem<-c("l","r")
 task<-c("w","l")
