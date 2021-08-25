@@ -239,6 +239,23 @@ skewness(anova_p1a_w$lm$residuals)
 kurtosis(anova_p1a_w$lm$residuals)
 
 
+#calculate mean and sd
+
+erp<-"p1a_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+
 
 p1_lats_w<-filter(latencies, latencies$Component == "p1" & latencies$Task == "w")
 
@@ -250,6 +267,24 @@ hist(anova_p1l_w$lm$residuals)
 shapiro.test(anova_p1l_w$lm$residuals)
 skewness(anova_p1l_w$lm$residuals)
 kurtosis(anova_p1l_w$lm$residuals)
+
+
+#calculate mean and sd
+
+erp<-"p1l_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
 
 
 n1_amps_w<-filter(amplitudes, amplitudes$Component == "n1"& amplitudes$Task == "w")
@@ -264,6 +299,23 @@ skewness(anova_n1a_w$lm$residuals)
 kurtosis(anova_n1a_w$lm$residuals)
 
 
+#calculate mean and sd
+
+erp<-"n1a_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+n1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+
 n1_lats_w<-filter(latencies, latencies$Component == "n1" & latencies$Task == "w")
 
 anova_n1l_w<-aov_ez(id = "id", dv = "value", data = n1_lats_w, within = c("Fluency","Hemisphere"))
@@ -274,6 +326,22 @@ hist(anova_n1l_w$lm$residuals)
 shapiro.test(anova_n1l_w$lm$residuals)
 skewness(anova_n1l_w$lm$residuals)
 kurtosis(anova_n1l_w$lm$residuals)
+
+
+#calculate mean and sd
+
+erp<-"n1l_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+n1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
 
@@ -289,6 +357,22 @@ skewness(anova_p3a_w$lm$residuals)
 kurtosis(anova_p3a_w$lm$residuals)
 
 
+#calculate mean and sd
+
+erp<-"p3a_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p3a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
 
 p3_lats_w<-filter(latencies, latencies$Component == "p3" & latencies$Task == "w")
 
@@ -302,6 +386,26 @@ skewness(anova_p3l_w$lm$residuals)
 kurtosis(anova_p3l_w$lm$residuals)
 
 
+
+#calculate mean and sd
+
+erp<-"p3l_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p3l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+
+
+
 sl_amps_w<-filter(amplitudes, amplitudes$Component == "sl"& amplitudes$Task == "w")
 
 anova_sla_w<-aov_ez(id = "id", dv = "value", data = sl_amps_w, within = c("Fluency","Hemisphere"))
@@ -312,6 +416,26 @@ hist(anova_sla_w$lm$residuals)
 shapiro.test(anova_sla_w$lm$residuals)
 skewness(anova_sla_w$lm$residuals)
 kurtosis(anova_sla_w$lm$residuals)
+
+
+
+#calculate mean and sd
+
+erp<-"sla_w"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+sla<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+dstatsw<-list(p1a=p1a,p1l=p1l,n1a=n1a,n1l=n1l,p3a=p3a,p3l=p3l,sla=sla)
 
 
 #Letter Task
@@ -403,6 +527,109 @@ hist(anova_sla_l$lm$residuals)
 shapiro.test(anova_sla_l$lm$residuals)
 skewness(anova_sla_l$lm$residuals)
 kurtosis(anova_sla_l$lm$residuals)
+
+#calculate mean and sd
+
+erp<-"p1a_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+erp<-"p1l_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+
+erp<-"n1a_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+n1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+erp<-"n1l_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+n1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+erp<-"p3a_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p3a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+erp<-"p3l_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+p3l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+erp<-"sla_l"
+df<-get(paste("anova_",erp, sep = ""))
+mfl<-mean(df$data$wide$f_l)
+mfr<-mean(df$data$wide$f_r)
+mdl<-mean(df$data$wide$d_l)
+mdr<-mean(df$data$wide$d_r)
+sfl<-sd(df$data$wide$f_l)
+sfr<-sd(df$data$wide$f_r)
+sdl<-sd(df$data$wide$d_l)
+sdr<-sd(df$data$wide$d_r)
+
+sla<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
+
+
+
+dstatsl<-list(p1a=p1a,p1l=p1l,n1a=n1a,n1l=n1l,p3a=p3a,p3l=p3l,sla=sla)
 
 
 
@@ -707,4 +934,7 @@ correlations_2[[corobject]]$plot<-
 
 #fluent letter amplitudes on right hemisphere have a low p-val for WJ
 plot(flu_amps_l_r$l_p1a_f_r,behavioural_data$WJ_Tot)
+
+
+
 
