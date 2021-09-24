@@ -16,6 +16,7 @@ library(psych)
 library(corrplot)
 library(RColorBrewer)
 library(emmeans)
+library(dplyr)
 
 
 #SET WORKING DIRECTORY
@@ -528,6 +529,7 @@ shapiro.test(anova_sla_l$lm$residuals)
 skewness(anova_sla_l$lm$residuals)
 kurtosis(anova_sla_l$lm$residuals)
 
+
 #calculate mean and sd
 
 erp<-"p1a_l"
@@ -935,6 +937,22 @@ correlations_2[[corobject]]$plot<-
 #fluent letter amplitudes on right hemisphere have a low p-val for WJ
 plot(flu_amps_l_r$l_p1a_f_r,behavioural_data$WJ_Tot)
 
+
+
+
+
+corrplot(correlations$diff_amps_l_r_cor$r[3:17,], method = "number", 
+         tl.cex=0.8,
+         # is.corr = F, 
+         # number.cex = 0.5, 
+         # cl.cex = 0.5,
+         cl.ratio=0.4,
+         col = brewer.pal(n = 10, name = 'Dark2'),
+         cl.lim= c(-1,1)
+)
+
+
+plot(diff_lats_l_r$P3,behavioural_data$WJ_PC)
 
 
 
