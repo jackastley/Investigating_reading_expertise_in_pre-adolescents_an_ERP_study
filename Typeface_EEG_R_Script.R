@@ -37,9 +37,8 @@ er_data<- er_data %>% pivot_longer(
   values_to = "value"
 )
 
+#CALCULATE EROR RATES
 error_rates<-tibble(Fluent_Target_Letter=NA,Disfluent_Target_Letter=NA,Fluent_NonTarget_Letter=NA,Disfluent_NonTarget_Letter=NA,Fluent_Target_Word=NA,Disfluent_Target_Word=NA,Fluent_NonTarget_Word=NA,Disfluent_NonTarget_Word=NA, .rows = 39)
-
-
 
 correct<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="CR")]
 incorrect<-er_data$value[which(er_data$Fluency=="F"&er_data$Target=="T"&er_data$Task=="L"&er_data$Response=="IR")]
@@ -78,11 +77,12 @@ correct<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Ta
 incorrect<-er_data$value[which(er_data$Fluency=="D"&er_data$Target=="N"&er_data$Task=="W"&er_data$Response=="IR")]
 error_rates$Disfluent_NonTarget_Word<-(incorrect/(correct+incorrect))*100
 
-#MAKE ERROR RATES A MATRIX
+#MAKE AN ERROR RATES MATRIX
 error_rates$Average<-NA
 error_rates$Average_L<-NA
 error_rates$Average_W<-NA
 error_rates<-as.matrix(error_rates)
+
 
 #CALCULATE AVERAGE ERROR RATE PER PARTICIPANT AND IN EACH TASK
 for(p in 1:39){
@@ -107,7 +107,7 @@ error_rates<-format(error_rates, digits=2, nsmall=2)
 nt_error_rates<-format(nt_error_rates, digits=2, nsmall=2)
 #write.csv(nt_error_rates, file="nt_error_rates.csv")
 
-#Participant 22 has an error rate greater than 50% for non targets
+#Participant 22 has an error rate greater than 50% for non-targets
 
 
 #SET DATA FILE NAME
@@ -115,18 +115,15 @@ nt_error_rates<-format(nt_error_rates, digits=2, nsmall=2)
 filename<-"ALL_DATA.csv"
 
 #LOAD DATA
-
 all_data<-read.csv(filename)
 
-#DELETE PARTICIPANT 23
+#DELETE PARTICIPANT 22
 all_data<-all_data[-22,]
+
 
 ##CHECK ALL THE DATA FOR OUTLIERS
 
 #CREATE Z SCORE DATA FRAME
-
-zscores<- (all_data[1:length(all_data),]-mean(all_data[1:length(all_data)]))/sd(all_data[1:length(all_data)])
-
 all_data_means<-colMeans(all_data,na.rm = TRUE)
 all_data_means<-as.data.frame(all_data_means)
 all_data_means<-t(all_data_means)
