@@ -20,7 +20,6 @@ library(dplyr)
 
 
 #SET WORKING DIRECTORY
-
 setwd("//rdfs.unisa.edu.au/Group_bbb_research/CAIN/PEOPLE/JackA/Typeface_EEG/Data_Analysis")
 
 
@@ -91,7 +90,6 @@ for(p in 1:39){
   error_rates[p,11]<-mean(error_rates[p,5:8], na.rm=T)
 }
 
-#EXTRACT ONLY NON-TARGET ERROR RATES FIX!!!!
 nt_error_rates<-error_rates[,c(3,4,7,8)]
 nt_error_rates<-cbind(nt_error_rates, Average=0,Average_L=0,Average_W=0)
 
@@ -168,34 +166,6 @@ o_coords<-na.omit(o_coords)
 #remove demographic coordinates
 o_coords<-filter(.data = o_coords, o_coords$column > 4)
 
-
-# #SEE WHAT HAPPENS WHEN WE REPLACE WITH Z=3
-# #create means and sds vector
-# data_means<-c()
-# for(l in 1:length(all_data)){
-#   data_means[l]<-mean(all_data[,l], na.rm=TRUE)
-# }
-# 
-# data_sds<-c()
-# for(l in 1:length(all_data)){
-#   data_sds[l]<-sd(all_data[,l], na.rm=TRUE)
-# }
-# 
-# #NA outliers we don't want
-# for(l in 1:19){
-#   all_data[o_coords$row[l],o_coords$column[l]]<-NA
-# }
-# 
-# for(l in 20:length(o_coords$column)){
-#   
-#   if(zscores[o_coords$row[l],o_coords$column[l]] > 0){
-#     all_data[o_coords$row[l],o_coords$column[l]]<- 3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
-#     }
-#   if(zscores[o_coords$row[l],o_coords$column[l]] < 0){
-#     all_data[o_coords$row[l],o_coords$column[l]]<- -3*data_sds[o_coords$column[l]]+data_means[o_coords$column[l]]
-#   }
-# }
-# 
 
 #NA outliers we don't want
 for(l in 1:length(o_coords$row)){
@@ -645,19 +615,6 @@ anova_p3l_l$data$long$interaction<-interaction(anova_p3l_l$data$long$Fluency, an
 boxplot<-ggplot(aes(y = value, x = interaction), data = anova_p3l_l$data$long) + 
   geom_boxplot()
 boxplot
-# boxplot<-boxplot + 
-#   scale_fill_discrete(name = "Congruence", labels = c("Congruent","Incongruent")) +
-#   labs(title="Three Way Interaction", x = "Colour Identification                                                                                             Word Identification", y = "Reaction Time (ms)")+
-#   scale_x_discrete(labels= c("D1","D2","D3","D4","D1","D2","D3","D4","D1","D2","D3","D4","D1","D2","D3","D4"))
-# 
-# boxplot+
-#   geom_signif(
-#     data=anno_df, 
-#     aes(xmin = group1, xmax = group2, annotations = p.signif, y_position = y_pos), 
-#     manual= TRUE)
-
-
-
 
 
 ## check mean and sd for p3 lats
@@ -705,7 +662,6 @@ flu_lats_l_r<-test[9:11]
 
 
 #CALCULATE DIFFERENCES BETWEEN FLUENT AND DISFLUENT AMPLITUDES FOR EACH COMPONENT AND CORRELATE WITH BEHAVIOURAL DATA
-
 behavioural_data<-all_data[3:38]
 
 correlations<-list()
@@ -718,9 +674,6 @@ correlations$diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_amps_w_l_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -735,9 +688,6 @@ correlations$diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_amps_l_l_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -752,9 +702,6 @@ correlations$diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_amps_w_r_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -769,9 +716,6 @@ correlations$diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_amps_l_r_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -786,9 +730,6 @@ correlations$diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_lats_w_l_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -803,9 +744,6 @@ correlations$diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_lats_l_l_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -819,9 +757,6 @@ correlations$diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_lats_w_r_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -835,9 +770,6 @@ correlations$diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust
 #CORRELATION P-VALUE MATRIX
 corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(0,1)
@@ -857,9 +789,6 @@ corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number",
 #fluent
 (mean(anova_sla_w$data$wide$f_l)+mean(anova_sla_w$data$wide$f_r))/2
 (sd(anova_sla_w$data$wide$f_l)+sd(anova_sla_w$data$wide$f_r))/2
-
-
-#1 less participant in fluent amplitudes for some reason
 
 
 #CALCULATE MEAN AND SD AMPLITUDE FOR LEFT AND RIGHT HEMISPHERE FOR N1 WORD TASK
@@ -906,9 +835,6 @@ for(v in 1:length(value)){
         correlations_2[[corobject]]$plot<-
           corrplot(correlations_2[[corobject]]$p[3:17,], method = "number", 
                    tl.cex=0.8,
-                   # is.corr = F, 
-                   # number.cex = 0.5, 
-                   # cl.cex = 0.5,
                    cl.ratio=0.4,
                    col = brewer.pal(n = 10, name = 'Dark2'),
                    cl.lim= c(0,1)
@@ -922,9 +848,6 @@ for(v in 1:length(value)){
 correlations_2[[corobject]]$plot<-
   corrplot(correlations_2[[corobject_c[8]]]$p[3:17,], method = "number", 
            tl.cex=0.8,
-           # is.corr = F, 
-           # number.cex = 0.5, 
-           # cl.cex = 0.5,
            cl.ratio=0.4,
            col = brewer.pal(n = 10, name = 'Dark2'),
            cl.lim= c(0,1)
@@ -940,9 +863,6 @@ plot(flu_amps_l_r$l_p1a_f_r,behavioural_data$WJ_Tot)
 
 corrplot(correlations$diff_amps_l_r_cor$r[3:17,], method = "number", 
          tl.cex=0.8,
-         # is.corr = F, 
-         # number.cex = 0.5, 
-         # cl.cex = 0.5,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
          cl.lim= c(-1,1)
