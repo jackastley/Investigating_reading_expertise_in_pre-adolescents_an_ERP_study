@@ -107,6 +107,15 @@ nt_error_rates<-format(nt_error_rates, digits=2, nsmall=2)
 
 #Participant 22 has an error rate greater than 50% for non-targets
 
+#COMPARE ERROR RATES
+errortests<-as.data.frame(nt_error_rates)
+errortests<-lapply(errortests,as.numeric)
+errortests<-na.omit(as.data.frame(errortests))
+t.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
+t.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
+
+wilcox.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
+wilcox.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
 
 #SET DATA FILE NAME
 
