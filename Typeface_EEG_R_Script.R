@@ -114,6 +114,11 @@ errortests<-na.omit(as.data.frame(errortests))
 t.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
 t.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
 
+hists<-list()
+for (i in 1:4){
+  hists[[paste("h",i,sep="")]] <-hist(errortests[,i])
+}
+
 wilcox.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
 wilcox.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
 
@@ -616,6 +621,11 @@ contrasting <- emmeans(anova_p3l_l, ~ Fluency*Hemisphere)
 contrast(contrasting, method =  "pairwise", adjust = "none")
 eff_size(contrasting, sigma = mean(sigma(anova_p3l_l$lm)), edf=df.residual(anova_p3l_l$lm))
 
+#POST-HOC COMPARISONS FOR FLUENCY:HEMISPHERE INTERACTION FOR N1 amps IN THE word TASK
+contrasting <- emmeans(anova_n1a_w, ~ Fluency*Hemisphere)
+contrast(contrasting, method =  "pairwise", adjust = "none")
+eff_size(contrasting, sigma = mean(sigma(anova_n1a_w$lm)), edf=df.residual(anova_n1a_w$lm))
+
 #MAKE BOXPLOT TO CHECK INTERACTION
 
 #boxplot
@@ -881,4 +891,42 @@ corrplot(correlations$diff_amps_l_r_cor$r[3:17,], method = "number",
 plot(diff_lats_l_r$P3,behavioural_data$WJ_PC)
 
 
+
+#print means and sds averaged across hemisphere for each component
+#FLUENT
+#letters
+ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
+for(c in ampcomp){
+  m<-mean(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='f')$value)
+  s<-sd(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='f')$value)
+  print(paste("Mean of", c, "=", m))
+  print(paste("SD of", c, "=", s))
+}
+
+#words
+ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
+for(c in ampcomp){
+  m<-mean(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='f')$value)
+  s<-sd(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='f')$value)
+  print(paste("Mean of", c, "=", m))
+  print(paste("SD of", c, "=", s))
+}
+
+#DISFLUENT
+ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
+for(c in ampcomp){
+  m<-mean(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='d')$value)
+  s<-sd(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='d')$value)
+  print(paste("Mean of", c, "=", m))
+  print(paste("SD of", c, "=", s))
+}
+
+#words
+ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
+for(c in ampcomp){
+  m<-mean(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='d')$value)
+  s<-sd(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='d')$value)
+  print(paste("Mean of", c, "=", m))
+  print(paste("SD of", c, "=", s))
+}
 
