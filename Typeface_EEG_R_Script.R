@@ -690,7 +690,7 @@ colnames(diff_amps_w_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_amps_w_l_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_amps_w_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -704,7 +704,7 @@ colnames(diff_amps_l_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_amps_l_l_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_amps_l_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -718,7 +718,7 @@ colnames(diff_amps_w_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_amps_w_r_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_amps_w_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -732,7 +732,7 @@ colnames(diff_amps_l_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_amps_l_r_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_amps_l_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -746,7 +746,7 @@ colnames(diff_lats_w_l)<-c("P1","N1","P3")
 correlations$diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_lats_w_l_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_lats_w_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -760,7 +760,7 @@ colnames(diff_lats_l_l)<-c("P1","N1","P3")
 correlations$diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_lats_l_l_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_lats_l_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -773,7 +773,7 @@ colnames(diff_lats_w_r)<-c("P1","N1","P3")
 correlations$diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_lats_w_r_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_lats_w_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -786,7 +786,7 @@ colnames(diff_lats_l_r)<-c("P1","N1","P3")
 correlations$diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
 
 #CORRELATION P-VALUE MATRIX
-corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number", 
+corrplot(correlations$diff_lats_l_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
          tl.cex=0.8,
          cl.ratio=0.4,
          col = brewer.pal(n = 10, name = 'Dark2'),
@@ -844,7 +844,7 @@ for(v in 1:length(value)){
         correlations_2[[corobject]]<-corr.test(behavioural_data, get(object),adjust="none")
         
         correlations_2[[corobject]]$plot<-
-          corrplot(correlations_2[[corobject]]$p[3:17,], method = "number", 
+          corrplot(correlations_2[[corobject]]$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
                    tl.cex=0.8,
                    cl.ratio=0.4,
                    col = brewer.pal(n = 10, name = 'Dark2'),
@@ -857,7 +857,7 @@ for(v in 1:length(value)){
 
 
 correlations_2[[corobject]]$plot<-
-  corrplot(correlations_2[[corobject_c[8]]]$p[3:17,], method = "number", 
+  corrplot(correlations_2[[corobject_c[8]]]$p[c(3,6,7,8,12,14,15,16,17),], method = "number", 
            tl.cex=0.8,
            cl.ratio=0.4,
            col = brewer.pal(n = 10, name = 'Dark2'),
