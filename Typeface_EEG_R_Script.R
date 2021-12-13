@@ -911,3 +911,15 @@ usedbdata<-behavioural_data[all_data$id %in% usedids,]
 
 colMeans(usedbdata,na.rm=T)
 
+
+path<-'//rdfs.unisa.edu.au/Group_bbb_research/CAIN/PEOPLE/JackA/Typeface_EEG/Data_Analysis/Supplementary Documents/Tables/'
+task<-c('l','w')
+
+#SAVE ALL ANOVAS FOR SUPLEMENTARY DOCUMENT
+for(a in ampcomp){
+  for(i in task){
+    write.csv(get(paste('anova_',a,'_',i,sep=''))$anova_table,paste(path,'anova_',a,'_',i,'.csv',sep=''))
+  }
+}
+write.csv(anova_n1a_w$anova_table, paste(path,'anova_n1a_w.csv', sep =''))
+
