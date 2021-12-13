@@ -4,7 +4,7 @@ R code and data files for the analysis undertaken in Astley and colleagues (in p
 
 Astley J, Keage HAD, Kelson E, Callahan R, Hofmann J, Thiessen M, Kohler M, Coussens S (in preparation). Evidence of letter and word recognition expertise development in children: an event-related potential study.
 
-##File descriptions
+## File descriptions
 
 - Typeface_EEG_R_Script.R - R script containing all data processing and statistical analyses used in the study
 - ALL_DATA.csv - ERP and psychometric data used in the analysis
