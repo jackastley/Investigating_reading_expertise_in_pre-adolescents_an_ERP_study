@@ -930,3 +930,11 @@ for(c in ampcomp){
   print(paste("SD of", c, "=", s))
 }
 
+
+#CALCULATE BEHAVIOURAL DATA MEANS
+usedids<-unique(c(anova_n1a_l$data$wide$id,anova_n1a_w$data$wide$id))
+
+usedbdata<-behavioural_data[all_data$id %in% usedids,]
+
+colMeans(usedbdata,na.rm=T)
+
