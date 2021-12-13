@@ -1,0 +1,23 @@
+﻿Variable,Description
+[p1/n1/p3/sl]_[amps/lats]_[w/l],Data stratified by component and task
+[w/l]_[p1/n1/p3/sl][a/l]_[l/r],task_ERP component_hemisphere
+all_data,Data frame with ERP and psychometric data
+anova_[p1/n1/p3/sl][a/l]_[w/l],ANOVA files for each component and task
+correlations,list containing correlation matrices comparing the difference between fluent and disfluent ERP components against the psychometric data
+correlations 2,list containing correlation matrices comparing either fluent or disfluent ERP components against the psychometric data
+dstats[w/l],Means and SDs for each component and task stratified by fluency and hemisphere
+er_data,Error rates raw data
+error_tests,Data frame for error rates wilcoxon signed rank tests
+flanders,Flinders Handedness Survey score
+id,Unique identifier number
+new_data,ERP data formatted to run ANOVAs
+nt_error_rates,Error rates for non-target stimuli
+o_coords,outliers coordinates
+usedbdata,The psychometric data of the participants used in the analysis
+usedids,IDs of the participants used in the analysis
+WJ_LW_ID,Woodcock Johnson letter-word identification
+WJ_PC,Woodcock Johnson passage comprehension
+WJ_RF_Tot,Woodcock Johnson reading fluency total score
+WJ_RV,Woodcock Johnson reading vocabulary
+WJ_WA,Woodcock Johnson Word Attack
+zscores,z-scores matrix

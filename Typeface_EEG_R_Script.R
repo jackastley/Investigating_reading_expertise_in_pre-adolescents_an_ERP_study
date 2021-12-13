@@ -101,26 +101,18 @@ for(p in 1:39){
 
 
 error_rates<-format(error_rates, digits=2, nsmall=2)
-#write.csv(error_rates, file="error_rates.csv")
 nt_error_rates<-format(nt_error_rates, digits=2, nsmall=2)
-#write.csv(nt_error_rates, file="nt_error_rates.csv")
 
 #Participant 22 has an error rate greater than 50% for non-targets
 
-#COMPARE ERROR RATES
+
+#COMPARE ERROR RATES WITH WILCOXON SIGNED RANK TESTS
 errortests<-as.data.frame(nt_error_rates)
 errortests<-lapply(errortests,as.numeric)
 errortests<-na.omit(as.data.frame(errortests))
-t.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
-t.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
-
-hists<-list()
-for (i in 1:4){
-  hists[[paste("h",i,sep="")]] <-hist(errortests[,i])
-}
-
 wilcox.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
 wilcox.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
+
 
 ###LOAD IN ERP AND BEHAVIOURAL DATA
 #SET DATA FILE NAME
@@ -129,7 +121,7 @@ filename<-"ALL_DATA.csv"
 #LOAD DATA
 all_data<-read.csv(filename)
 
-#DELETE PARTICIPANT 22
+#DELETE PARTICIPANT 22 WITH HIGH ERROR RATE
 all_data<-all_data[-22,]
 
 
@@ -139,7 +131,6 @@ all_data<-all_data[-22,]
 all_data_means<-colMeans(all_data,na.rm = TRUE)
 all_data_means<-as.data.frame(all_data_means)
 all_data_means<-t(all_data_means)
-
 
 all_data_sds<-sapply(all_data[,1:length(all_data)],sd, na.rm = TRUE)
 all_data_sds<-as.data.frame(all_data_sds)
@@ -189,8 +180,8 @@ for(l in 1:length(o_coords$row)){
 #remove WJ_RV_ANA with 99 value
 all_data[27,13]<-NA
 
-#CREATE DATA FRAME SO ANOVA WILL WORK
 
+#FORMAT DATA FRAME FOR ANOVA
 #CONVERT FROM WIDE TO LONG DATA
 new_data<- all_data %>% pivot_longer(
   cols= w_p1a_f_l: l_sla_d_r,
@@ -205,11 +196,9 @@ latencies<-filter(.data = new_data, new_data$Value_Type == "l")
 
 
 ###ANOVAs
-#Word task
+#WORD TASK
+#P1 AMPLITUDES
 p1_amps_w<-filter(amplitudes, amplitudes$Component == "p1" & amplitudes$Task == "w")
-
-hist(p1_amps_w$value)
-
 anova_p1a_w<-aov_ez(id = "id", dv = "value", data = p1_amps_w, within = c("Fluency","Hemisphere"))
 anova_p1a_w
 
@@ -221,7 +210,6 @@ kurtosis(anova_p1a_w$lm$residuals)
 
 
 #calculate mean and sd
-
 erp<-"p1a_w"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -236,8 +224,7 @@ sdr<-sd(df$data$wide$d_r)
 p1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
-
-
+#P1 LATENCIES
 p1_lats_w<-filter(latencies, latencies$Component == "p1" & latencies$Task == "w")
 
 anova_p1l_w<-aov_ez(id = "id", dv = "value", data = p1_lats_w, within = c("Fluency","Hemisphere"))
@@ -266,8 +253,7 @@ sdr<-sd(df$data$wide$d_r)
 p1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
-
-
+#N1 AMPLITUDES
 n1_amps_w<-filter(amplitudes, amplitudes$Component == "n1"& amplitudes$Task == "w")
 
 anova_n1a_w<-aov_ez(id = "id", dv = "value", data = n1_amps_w, within = c("Fluency","Hemisphere"))
@@ -296,7 +282,7 @@ sdr<-sd(df$data$wide$d_r)
 n1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
-
+#N1 LATENCIES
 n1_lats_w<-filter(latencies, latencies$Component == "n1" & latencies$Task == "w")
 
 anova_n1l_w<-aov_ez(id = "id", dv = "value", data = n1_lats_w, within = c("Fluency","Hemisphere"))
@@ -325,7 +311,7 @@ sdr<-sd(df$data$wide$d_r)
 n1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
-
+#P3 AMPLITUDES
 p3_amps_w<-filter(amplitudes, amplitudes$Component == "p3"& amplitudes$Task == "w")
 
 anova_p3a_w<-aov_ez(id = "id", dv = "value", data = p3_amps_w, within = c("Fluency","Hemisphere"))
@@ -354,7 +340,7 @@ sdr<-sd(df$data$wide$d_r)
 p3a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
-
+#P3 LATENCIES
 p3_lats_w<-filter(latencies, latencies$Component == "p3" & latencies$Task == "w")
 
 anova_p3l_w<-aov_ez(id = "id", dv = "value", data = p3_lats_w, within = c("Fluency","Hemisphere"))
@@ -365,7 +351,6 @@ hist(anova_p3l_w$lm$residuals)
 shapiro.test(anova_p3l_w$lm$residuals)
 skewness(anova_p3l_w$lm$residuals)
 kurtosis(anova_p3l_w$lm$residuals)
-
 
 
 #calculate mean and sd
@@ -385,8 +370,7 @@ p3l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
 
-
-
+#SUSTAINED LATE ACTIVITY
 sl_amps_w<-filter(amplitudes, amplitudes$Component == "sl"& amplitudes$Task == "w")
 
 anova_sla_w<-aov_ez(id = "id", dv = "value", data = sl_amps_w, within = c("Fluency","Hemisphere"))
@@ -421,6 +405,7 @@ dstatsw<-list(p1a=p1a,p1l=p1l,n1a=n1a,n1l=n1l,p3a=p3a,p3l=p3l,sla=sla)
 
 #Letter Task
 
+#P1 AMPLITUDES
 p1_amps_l<-filter(amplitudes, amplitudes$Component == "p1" & amplitudes$Task == "l")
 
 anova_p1a_l<-aov_ez(id = "id", dv = "value", data = p1_amps_l, within = c("Fluency","Hemisphere"))
@@ -432,86 +417,7 @@ shapiro.test(anova_p1a_l$lm$residuals)
 skewness(anova_p1a_l$lm$residuals)
 kurtosis(anova_p1a_l$lm$residuals)
 
-
-
-p1_lats_l<-filter(latencies, latencies$Component == "p1" & latencies$Task == "l")
-
-anova_p1l_l<-aov_ez(id = "id", dv = "value", data = p1_lats_l, within = c("Fluency","Hemisphere"))
-anova_p1l_l
-
-#check normality
-hist(anova_p1l_l$lm$residuals)
-shapiro.test(anova_p1l_l$lm$residuals)
-skewness(anova_p1l_l$lm$residuals)
-kurtosis(anova_p1l_l$lm$residuals)
-
-
-
-n1_amps_l<-filter(amplitudes, amplitudes$Component == "n1"& amplitudes$Task == "l")
-
-anova_n1a_l<-aov_ez(id = "id", dv = "value", data = n1_amps_l, within = c("Fluency","Hemisphere"))
-anova_n1a_l
-
-#check normality
-hist(anova_n1a_l$lm$residuals)
-shapiro.test(anova_n1a_l$lm$residuals)
-skewness(anova_n1a_l$lm$residuals)
-kurtosis(anova_n1a_l$lm$residuals)
-
-
-
-n1_lats_l<-filter(latencies, latencies$Component == "n1" & latencies$Task == "l")
-
-anova_n1l_l<-aov_ez(id = "id", dv = "value", data = n1_lats_l, within = c("Fluency","Hemisphere"))
-anova_n1l_l
-
-#check normality
-hist(anova_n1l_l$lm$residuals)
-shapiro.test(anova_n1l_l$lm$residuals)
-skewness(anova_n1l_l$lm$residuals)
-kurtosis(anova_n1l_l$lm$residuals)
-
-
-
-p3_amps_l<-filter(amplitudes, amplitudes$Component == "p3"& amplitudes$Task == "l")
-
-anova_p3a_l<-aov_ez(id = "id", dv = "value", data = p3_amps_l, within = c("Fluency","Hemisphere"))
-anova_p3a_l
-
-#check normality
-hist(anova_p3a_l$lm$residuals)
-shapiro.test(anova_p3a_l$lm$residuals)
-skewness(anova_p3a_l$lm$residuals)
-kurtosis(anova_p3a_l$lm$residuals)
-
-
-p3_lats_l<-filter(latencies, latencies$Component == "p3" & latencies$Task == "l")
-
-anova_p3l_l<-aov_ez(id = "id", dv = "value", data = p3_lats_l, within = c("Fluency","Hemisphere"))
-anova_p3l_l
-
-
-#check normality
-hist(anova_p3l_l$lm$residuals)
-shapiro.test(anova_p3l_l$lm$residuals)
-skewness(anova_p3l_l$lm$residuals)
-kurtosis(anova_p3l_l$lm$residuals)
-
-
-sl_amps_l<-filter(amplitudes, amplitudes$Component == "sl"& amplitudes$Task == "l")
-
-anova_sla_l<-aov_ez(id = "id", dv = "value", data = sl_amps_l, within = c("Fluency","Hemisphere"))
-anova_sla_l
-
-#check normality
-hist(anova_sla_l$lm$residuals)
-shapiro.test(anova_sla_l$lm$residuals)
-skewness(anova_sla_l$lm$residuals)
-kurtosis(anova_sla_l$lm$residuals)
-
-
-#calculate mean and sd for each component
-
+#calculate mean and sd
 erp<-"p1a_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -526,6 +432,19 @@ sdr<-sd(df$data$wide$d_r)
 p1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
+#P1 LATENCIES
+p1_lats_l<-filter(latencies, latencies$Component == "p1" & latencies$Task == "l")
+
+anova_p1l_l<-aov_ez(id = "id", dv = "value", data = p1_lats_l, within = c("Fluency","Hemisphere"))
+anova_p1l_l
+
+#check normality
+hist(anova_p1l_l$lm$residuals)
+shapiro.test(anova_p1l_l$lm$residuals)
+skewness(anova_p1l_l$lm$residuals)
+kurtosis(anova_p1l_l$lm$residuals)
+
+#calculate mean and sd
 erp<-"p1l_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -541,6 +460,19 @@ p1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
 
+#N1 AMPLITUDES
+n1_amps_l<-filter(amplitudes, amplitudes$Component == "n1"& amplitudes$Task == "l")
+
+anova_n1a_l<-aov_ez(id = "id", dv = "value", data = n1_amps_l, within = c("Fluency","Hemisphere"))
+anova_n1a_l
+
+#check normality
+hist(anova_n1a_l$lm$residuals)
+shapiro.test(anova_n1a_l$lm$residuals)
+skewness(anova_n1a_l$lm$residuals)
+kurtosis(anova_n1a_l$lm$residuals)
+
+#mean and sd
 erp<-"n1a_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -554,6 +486,20 @@ sdr<-sd(df$data$wide$d_r)
 
 n1a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
+
+#N1 LATENCIES
+n1_lats_l<-filter(latencies, latencies$Component == "n1" & latencies$Task == "l")
+
+anova_n1l_l<-aov_ez(id = "id", dv = "value", data = n1_lats_l, within = c("Fluency","Hemisphere"))
+anova_n1l_l
+
+#check normality
+hist(anova_n1l_l$lm$residuals)
+shapiro.test(anova_n1l_l$lm$residuals)
+skewness(anova_n1l_l$lm$residuals)
+kurtosis(anova_n1l_l$lm$residuals)
+
+#mean and sd
 erp<-"n1l_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -568,6 +514,19 @@ sdr<-sd(df$data$wide$d_r)
 n1l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
+#P3 AMPLITUDES
+p3_amps_l<-filter(amplitudes, amplitudes$Component == "p3"& amplitudes$Task == "l")
+
+anova_p3a_l<-aov_ez(id = "id", dv = "value", data = p3_amps_l, within = c("Fluency","Hemisphere"))
+anova_p3a_l
+
+#check normality
+hist(anova_p3a_l$lm$residuals)
+shapiro.test(anova_p3a_l$lm$residuals)
+skewness(anova_p3a_l$lm$residuals)
+kurtosis(anova_p3a_l$lm$residuals)
+
+#mean and sd
 erp<-"p3a_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -582,6 +541,20 @@ sdr<-sd(df$data$wide$d_r)
 p3a<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
+#P3 LATENCIES
+p3_lats_l<-filter(latencies, latencies$Component == "p3" & latencies$Task == "l")
+
+anova_p3l_l<-aov_ez(id = "id", dv = "value", data = p3_lats_l, within = c("Fluency","Hemisphere"))
+anova_p3l_l
+
+
+#check normality
+hist(anova_p3l_l$lm$residuals)
+shapiro.test(anova_p3l_l$lm$residuals)
+skewness(anova_p3l_l$lm$residuals)
+kurtosis(anova_p3l_l$lm$residuals)
+
+#mean and sd
 erp<-"p3l_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -596,6 +569,22 @@ sdr<-sd(df$data$wide$d_r)
 p3l<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
 
+
+#SUSTAINED LATE ACTIVITY
+sl_amps_l<-filter(amplitudes, amplitudes$Component == "sl"& amplitudes$Task == "l")
+
+anova_sla_l<-aov_ez(id = "id", dv = "value", data = sl_amps_l, within = c("Fluency","Hemisphere"))
+anova_sla_l
+
+#check normality
+hist(anova_sla_l$lm$residuals)
+shapiro.test(anova_sla_l$lm$residuals)
+skewness(anova_sla_l$lm$residuals)
+kurtosis(anova_sla_l$lm$residuals)
+
+
+#calculate mean and sd
+
 erp<-"sla_l"
 df<-get(paste("anova_",erp, sep = ""))
 mfl<-mean(df$data$wide$f_l)
@@ -609,8 +598,6 @@ sdr<-sd(df$data$wide$d_r)
 
 sla<-data.frame(mfl,mfr,mdl,mdr,sfl,sfr,sdl,sdr)
 
-
-
 dstatsl<-list(p1a=p1a,p1l=p1l,n1a=n1a,n1l=n1l,p3a=p3a,p3l=p3l,sla=sla)
 
 
@@ -620,35 +607,12 @@ contrasting <- emmeans(anova_p3l_l, ~ Fluency*Hemisphere)
 contrast(contrasting, method =  "pairwise", adjust = "none")
 eff_size(contrasting, sigma = mean(sigma(anova_p3l_l$lm)), edf=df.residual(anova_p3l_l$lm))
 
-#POST-HOC COMPARISONS FOR FLUENCY:HEMISPHERE INTERACTION FOR N1 amps IN THE word TASK
-contrasting <- emmeans(anova_n1a_w, ~ Fluency*Hemisphere)
-contrast(contrasting, method =  "pairwise", adjust = "none")
-eff_size(contrasting, sigma = mean(sigma(anova_n1a_w$lm)), edf=df.residual(anova_n1a_w$lm))
-
-#MAKE BOXPLOT TO CHECK INTERACTION
-
-#boxplot
-anova_p3l_l$data$long$interaction<-interaction(anova_p3l_l$data$long$Fluency, anova_p3l_l$data$long$Hemisphere, sep=":")
-
-boxplot<-ggplot(aes(y = value, x = interaction), data = anova_p3l_l$data$long) + 
-  geom_boxplot()
-boxplot
 
 
-## check mean and sd for p3 lats
-mean(p3_lats_l$value, na.rm = TRUE)
-sd(p3_lats_l$value, na.rm = TRUE)
-
-mean(p3_lats_w$value, na.rm = TRUE)
-sd(p3_lats_w$value, na.rm = TRUE)
-
-
-
-#Create matrices for each outcome variable
+#CREATE MATRICEES FOR EACH COMBINATION OF FACTORS
 test<-all_data[c(TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE)]
 dis_amps_w_l<-test[6:9]
 dis_lats_l_l<-test[10:12]
-
 
 test<-all_data[c(FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE)]
 dis_amps_w_r<-test[6:9]
@@ -684,7 +648,7 @@ behavioural_data<-all_data[3:38]
 
 correlations<-list()
 
-
+#WORD TASK, LEFT HEMISPHERE AMPLITUEDS
 diff_amps_w_l<- (dis_amps_w_l - flu_amps_w_l)
 colnames(diff_amps_w_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_l_cor<-corr.test(behavioural_data,diff_amps_w_l, adjust="none")
@@ -698,7 +662,7 @@ corrplot(correlations$diff_amps_w_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 )
 
 
-
+#LETTER TASK, LEFT HEMISPHERE AMPLITUDES
 diff_amps_l_l<- (dis_amps_l_l - flu_amps_l_l)
 colnames(diff_amps_l_l)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_l_cor<-corr.test(behavioural_data,diff_amps_l_l, adjust="none")
@@ -712,7 +676,7 @@ corrplot(correlations$diff_amps_l_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 )
 
 
-
+#WORD TASK, RIGHT HEMISPHERE AMPLITUDES
 diff_amps_w_r<- (dis_amps_w_r - flu_amps_w_r)
 colnames(diff_amps_w_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_w_r_cor<-corr.test(behavioural_data,diff_amps_w_r, adjust="none")
@@ -726,7 +690,7 @@ corrplot(correlations$diff_amps_w_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 )
 
 
-
+#LETTER TASK RIGHT HEMISPHERE AMPLITUDES
 diff_amps_l_r<- (dis_amps_l_r - flu_amps_l_r)
 colnames(diff_amps_l_r)<-c("P1","N1","P3","SLA")
 correlations$diff_amps_l_r_cor<-corr.test(behavioural_data,diff_amps_l_r, adjust="none")
@@ -740,7 +704,7 @@ corrplot(correlations$diff_amps_l_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 )
 
 
-
+#WORD TASK, LEFT HEMISPHERE LATENCIES
 diff_lats_w_l<- (dis_lats_w_l - flu_lats_w_l)
 colnames(diff_lats_w_l)<-c("P1","N1","P3")
 correlations$diff_lats_w_l_cor<-corr.test(behavioural_data,diff_lats_w_l, adjust="none")
@@ -754,7 +718,7 @@ corrplot(correlations$diff_lats_w_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 )
 
 
-
+#LETTER TASK, LEFT HEMISPHERE LATENCIES
 diff_lats_l_l<- (dis_lats_l_l - flu_lats_l_l)
 colnames(diff_lats_l_l)<-c("P1","N1","P3")
 correlations$diff_lats_l_l_cor<-corr.test(behavioural_data,diff_lats_l_l, adjust="none")
@@ -767,7 +731,7 @@ corrplot(correlations$diff_lats_l_l_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
          cl.lim= c(0,1)
 )
 
-
+#WORD TASK, RIGHT HEMISPHERE LATENCIES
 diff_lats_w_r<- (dis_lats_w_r - flu_lats_w_r)
 colnames(diff_lats_w_r)<-c("P1","N1","P3")
 correlations$diff_lats_w_r_cor<-corr.test(behavioural_data,diff_lats_w_r, adjust="none")
@@ -780,7 +744,7 @@ corrplot(correlations$diff_lats_w_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
          cl.lim= c(0,1)
 )
 
-
+#LETTER TASK, RIGHT HEMISPHERE LATENCIES
 diff_lats_l_r<- (dis_lats_l_r - flu_lats_l_r)
 colnames(diff_lats_l_r)<-c("P1","N1","P3")
 correlations$diff_lats_l_r_cor<-corr.test(behavioural_data,diff_lats_l_r, adjust="none")
@@ -795,11 +759,11 @@ corrplot(correlations$diff_lats_l_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 
 
 
-### CALCULATE MEANS AND SDS EFFECTS IDENTIFIED IN THE ANOVAS
+### CALCULATE MEANS AND SDS FOR THE EFFECTS IDENTIFIED IN THE ANOVAS
 
 #1:
 
-#CALCULATE MEAN AND SD SL AMPLITUDE FOR FLUENT AND DISFLUENT FONTS FOR THE WORD TASK
+#CALCULATE MEAN AND SD SLA FOR FLUENT AND DISFLUENT FONTS FOR THE WORD TASK
 #disfluent
 (mean(anova_sla_w$data$wide$d_l)+mean(anova_sla_w$data$wide$d_r))/2
 (sd(anova_sla_w$data$wide$d_l)+sd(anova_sla_w$data$wide$d_r))/2
@@ -809,8 +773,7 @@ corrplot(correlations$diff_lats_l_r_cor$p[c(3,6,7,8,12,14,15,16,17),], method = 
 (sd(anova_sla_w$data$wide$f_l)+sd(anova_sla_w$data$wide$f_r))/2
 
 
-#CALCULATE MEAN AND SD AMPLITUDE FOR LEFT AND RIGHT HEMISPHERE FOR N1 WORD TASK
-
+#CALCULATE MEAN AND SD AMPLITUDE FOR LEFT AND RIGHT HEMISPHERE FOR N1 AMPS WORD TASK
 right_n1a_w<- filter(n1_amps_w, n1_amps_w$Hemisphere == "r")
 left_n1a_w<- filter(n1_amps_w, n1_amps_w$Hemisphere == "l")
 
@@ -821,7 +784,7 @@ mean(right_n1a_w$value, na.rm=T)
 sd(right_n1a_w$value, na.rm=T)
 
 
-#CORRELATE DISFLUENT AND FLUENT AMPLITUDES SEPARATLEY
+#CORRELATE DISFLUENT AND FLUENT AMPLITUDES SEPARATLEY FOR SUPPLEMENTARY MATERIAL
 #set variables
 hem<-c("l","r")
 task<-c("w","l")
@@ -865,6 +828,7 @@ correlations_2[[corobject]]$plot<-
   )
 
 
+
 #print means and sds averaged across hemisphere for each component
 #FLUENT
 #letters
@@ -877,7 +841,6 @@ for(c in ampcomp){
 }
 
 #words
-ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
 for(c in ampcomp){
   m<-mean(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='f')$value)
   s<-sd(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='f')$value)
@@ -886,7 +849,6 @@ for(c in ampcomp){
 }
 
 #DISFLUENT
-ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
 for(c in ampcomp){
   m<-mean(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='d')$value)
   s<-sd(filter(get(paste("anova_",c,"_l", sep=""))$data$long, get(paste("anova_",c,"_l", sep=""))$data$long$Fluency=='d')$value)
@@ -895,7 +857,6 @@ for(c in ampcomp){
 }
 
 #words
-ampcomp<-c('p1a','n1a','p3a','sla','p1l','n1l','p3l')
 for(c in ampcomp){
   m<-mean(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='d')$value)
   s<-sd(filter(get(paste("anova_",c,"_w", sep=""))$data$long, get(paste("anova_",c,"_w", sep=""))$data$long$Fluency=='d')$value)
@@ -921,5 +882,4 @@ for(a in ampcomp){
     write.csv(get(paste('anova_',a,'_',i,sep=''))$anova_table,paste(path,'anova_',a,'_',i,'.csv',sep=''))
   }
 }
-write.csv(anova_n1a_w$anova_table, paste(path,'anova_n1a_w.csv', sep =''))
 
