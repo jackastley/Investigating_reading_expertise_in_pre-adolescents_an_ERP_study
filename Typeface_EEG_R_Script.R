@@ -122,8 +122,8 @@ for (i in 1:4){
 wilcox.test(errortests$Fluent_NonTarget_Letter,errortests$Disfluent_NonTarget_Letter, paired = T)
 wilcox.test(errortests$Fluent_NonTarget_Word,errortests$Disfluent_NonTarget_Word, paired = T)
 
+###LOAD IN ERP AND BEHAVIOURAL DATA
 #SET DATA FILE NAME
-
 filename<-"ALL_DATA.csv"
 
 #LOAD DATA
@@ -181,7 +181,7 @@ o_coords<-na.omit(o_coords)
 o_coords<-filter(.data = o_coords, o_coords$column > 4)
 
 
-#NA outliers we don't want
+#NA OUTLIERS IN DATA FRAME
 for(l in 1:length(o_coords$row)){
   all_data[o_coords$row[l],o_coords$column[l]]<-NA
 }
@@ -205,7 +205,6 @@ latencies<-filter(.data = new_data, new_data$Value_Type == "l")
 
 
 ###ANOVAs
-
 #Word task
 p1_amps_w<-filter(amplitudes, amplitudes$Component == "p1" & amplitudes$Task == "w")
 
@@ -511,7 +510,7 @@ skewness(anova_sla_l$lm$residuals)
 kurtosis(anova_sla_l$lm$residuals)
 
 
-#calculate mean and sd
+#calculate mean and sd for each component
 
 erp<-"p1a_l"
 df<-get(paste("anova_",erp, sep = ""))
@@ -796,7 +795,7 @@ corrplot(correlations$diff_lats_l_r_cor$p[3:17,], method = "number",
 
 
 
-### CALCULATE MEANS AND SDS FOR HYPOTHESES TESTING
+### CALCULATE MEANS AND SDS EFFECTS IDENTIFIED IN THE ANOVAS
 
 #1:
 
@@ -822,14 +821,7 @@ mean(right_n1a_w$value, na.rm=T)
 sd(right_n1a_w$value, na.rm=T)
 
 
-#CHECK NUMBER OF VALUES ARE CONSISTENT
-
-which(left_n1a_w$value %in% NA)
-which(right_n1a_w$value %in% NA)
-
-
 #CORRELATE DISFLUENT AND FLUENT AMPLITUDES SEPARATLEY
-
 #set variables
 hem<-c("l","r")
 task<-c("w","l")
@@ -871,25 +863,6 @@ correlations_2[[corobject]]$plot<-
            col = brewer.pal(n = 10, name = 'Dark2'),
            cl.lim= c(0,1)
   )
-
-
-#fluent letter amplitudes on right hemisphere have a low p-val for WJ
-plot(flu_amps_l_r$l_p1a_f_r,behavioural_data$WJ_Tot)
-
-
-
-
-
-corrplot(correlations$diff_amps_l_r_cor$r[3:17,], method = "number", 
-         tl.cex=0.8,
-         cl.ratio=0.4,
-         col = brewer.pal(n = 10, name = 'Dark2'),
-         cl.lim= c(-1,1)
-)
-
-
-plot(diff_lats_l_r$P3,behavioural_data$WJ_PC)
-
 
 
 #print means and sds averaged across hemisphere for each component
